@@ -1,7 +1,9 @@
 package com.example.balltouchapp
 
 import android.graphics.Color
+import android.util.DisplayMetrics
 import android.util.Log
+import android.view.WindowManager
 
 class Util {
     var i: Int = 1
@@ -43,4 +45,30 @@ class Util {
 
         return Color.rgb(mixRR.toInt(), mixGG.toInt(), mixBB.toInt())
     }
+
+    fun getText(): String {
+        val num = Math.random() * 100
+        if (num < 10) {
+            return "1"
+        } else if (num < 20) {
+            return "2"
+        } else if (num < 30) {
+            return "3"
+        } else if (num < 40) {
+            return "4"
+        } else if (num < 50) {
+            return "5"
+        } else if (num < 60) {
+            return "6"
+        } else if (num < 70) {
+            return "7"
+        } else if (num < 80) {
+            return "8"
+        } else if (num < 90) {
+            return "9"
+        } else {
+            return "0"
+        }
+    }
+
 }

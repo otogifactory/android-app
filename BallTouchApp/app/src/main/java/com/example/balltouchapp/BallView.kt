@@ -1,14 +1,13 @@
 package com.example.balltouchapp
 
 import android.content.Context
-import android.graphics.Canvas
-import android.graphics.Color
-import android.graphics.Paint
+import android.graphics.*
 import android.util.Log
 import android.view.MotionEvent
 import android.view.View
 import java.lang.Exception
 import kotlin.math.sqrt
+
 
 class BallView(context: Context?) : View(context){
     private val util: Util = Util()
@@ -19,12 +18,23 @@ class BallView(context: Context?) : View(context){
     private var ballNow = 0
     private var ballNext = 0
     private var paint: Paint = Paint()
+    private var isCircle = true
+    private var bmp: Bitmap? = BitmapFactory.decodeResource(resources, R.drawable.cat01)
+    private var widthCenter = 0F
+    private var heightCenter = 0F
+    private var showCat = false
 
     fun init() {
+        ballList.clear()
         for (i in 0 until ballCount) {
-            val ball = Ball(i, util.getFloat(), 10000F, 10000F, backColor)
+            val ball = Ball(i, util.getFloat(), 10000F, 10000F, backColor, util.getText())
             ballList.add(ball)
         }
+    }
+
+    fun setDisplyaSize(width: Int, height: Int) {
+        widthCenter = (width / 2).toFloat()
+        heightCenter = (height / 2).toFloat()
     }
 
     private fun allReset() {
@@ -42,7 +52,19 @@ class BallView(context: Context?) : View(context){
         // ペイントする色の指定と、丸い図形
         for (ball in ballList) {
             paint.color = ball.color
-            canvas?.drawCircle(ball.x, ball.y, ball.r, paint)
+            if (isCircle) {
+                canvas?.drawCircle(ball.x, ball.y, ball.r, paint)
+            } else {
+                paint.textSize = ball.r
+                canvas?.drawText(ball.kana, ball.x, ball.y, paint)
+                // canvas?.drawRect(ball.x, ball.y, (ball.x + ball.r), (ball.y + ball.r), paint)
+            }
+        }
+
+        // ボールリセット時の画像表示
+        if (showCat) {
+            showCat = !showCat
+            canvas?.drawBitmap(bmp!!, widthCenter, heightCenter, paint)
         }
     }
 
@@ -115,9 +137,17 @@ class BallView(context: Context?) : View(context){
                         ball.y = (ball.y + target.y) / 2
                         ball.r = (ball.r + target.r)
                         ball.color = util.getAddColor2(ball, target)
+                        ball.kana = (ball.kana.toInt() + target.kana.toInt()).toString()
                         target.reset()
+                        Log.d("INFO", "半径：" + ball.r.toString())
                     }
                 }
+            }
+            if(ball.r > 800F) {
+                init()
+                isCircle = !isCircle
+                showCat = !showCat
+
             }
         } catch (e: Exception) {
             Log.d("ERROR", "unionBall()")
