@@ -1,8 +1,6 @@
 package com.example.balltouchapp
 
-import android.graphics.Color
-
-class Ball(var id: Int, var r: Float, var x: Float, var y: Float, var color: Int) {
+class Ball(var id: Int, var r: Float, var x: Float, var y: Float, var color: Int, var kana: String) {
     private val util: Util = Util()
 
     fun reset() {
@@ -15,6 +13,7 @@ class Ball(var id: Int, var r: Float, var x: Float, var y: Float, var color: Int
         this.x = x
         this.y = y
         this.color = util.getColor()
+        this.kana = util.getText()
     }
 
 }
