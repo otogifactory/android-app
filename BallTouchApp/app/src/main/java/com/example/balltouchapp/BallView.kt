@@ -56,8 +56,8 @@ class BallView(context: Context?) : View(context){
                 canvas?.drawCircle(ball.x, ball.y, ball.r, paint)
             } else {
                 paint.textSize = ball.r
-                canvas?.drawText(ball.kana, ball.x, ball.y, paint)
-                // canvas?.drawRect(ball.x, ball.y, (ball.x + ball.r), (ball.y + ball.r), paint)
+                //canvas?.drawText(ball.kana, ball.x, ball.y, paint)
+                canvas?.drawRect(ball.x, ball.y, (ball.x + ball.r), (ball.y + ball.r), paint)
             }
         }
 
