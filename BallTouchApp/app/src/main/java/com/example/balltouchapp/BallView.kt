@@ -19,10 +19,10 @@ class BallView(context: Context?) : View(context){
     private var ballNext = 0
     private var paint: Paint = Paint()
     private var isCircle = true
-    private var bmp: Bitmap? = BitmapFactory.decodeResource(resources, R.drawable.cat01)
-    private var widthCenter = 0F
-    private var heightCenter = 0F
-    private var showCat = false
+    private var bmp: Bitmap? = BitmapFactory.decodeResource(resources, R.drawable.explosion2)
+    private var displayWidth = 0F
+    private var displayheight = 0F
+    private var explosion = false
 
     fun init() {
         ballList.clear()
@@ -33,8 +33,8 @@ class BallView(context: Context?) : View(context){
     }
 
     fun setDisplyaSize(width: Int, height: Int) {
-        widthCenter = (width / 2).toFloat()
-        heightCenter = (height / 2).toFloat()
+        displayWidth = width.toFloat()
+        displayheight = height.toFloat()
     }
 
     private fun allReset() {
@@ -62,9 +62,14 @@ class BallView(context: Context?) : View(context){
         }
 
         // ボールリセット時の画像表示
-        if (showCat) {
-            showCat = !showCat
-            canvas?.drawBitmap(bmp!!, widthCenter, heightCenter, paint)
+        if (explosion) {
+            explosion = !explosion
+            var newBmp: Bitmap = Bitmap.createScaledBitmap(bmp!!,
+                    displayWidth.toInt(),
+                    displayheight.toInt()-500,
+                true
+                )
+            canvas?.drawBitmap(newBmp!!, 0F, 0F, paint)
         }
     }
 
@@ -132,6 +137,7 @@ class BallView(context: Context?) : View(context){
                     val dy = ball.y - target.y
                     val len = sqrt(dx*dx + dy*dy)
                     if (len < ball.r + target.r) {
+                        Log.d("INFO", "len：" + len.toString())
                         contacting = true
                         ball.x = (ball.x + target.x) / 2
                         ball.y = (ball.y + target.y) / 2
@@ -140,14 +146,23 @@ class BallView(context: Context?) : View(context){
                         ball.kana = (ball.kana.toInt() + target.kana.toInt()).toString()
                         target.reset()
                         Log.d("INFO", "半径：" + ball.r.toString())
+
+                        for (target in ballList) {
+                            if (target.id != ballNow) {
+                                val dx = ball.x - target.x
+                                val dy = ball.y - target.y
+                                val len = sqrt(dx * dx + dy * dy)
+                                if (len < ball.r + target.r) {
+                                    target.reset()
+                                }
+                            }
+                        }
                     }
                 }
             }
-            if(ball.r > 800F) {
+            if(ball.r > 500F) {
                 init()
-                isCircle = !isCircle
-                showCat = !showCat
-
+                explosion = !explosion
             }
         } catch (e: Exception) {
             Log.d("ERROR", "unionBall()")
